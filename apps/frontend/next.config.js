@@ -12,6 +12,20 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  images: {
+    remotePatterns: [
+      {
+        // https://images.pexels.com
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+      },
+      {
+        // https://placehold.co/600x400
+        protocol: 'https',
+        hostname: 'placehold.co',
+      },
+    ],
+  },
 };
 
 const plugins = [
