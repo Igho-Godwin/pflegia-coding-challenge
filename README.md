@@ -57,7 +57,6 @@ Welcome to the Pizzaria Coding Challenge! In this challenge, you'll work on a ba
 
 </details>
 
-
 ### Setup
 
 - Clone the repository.
@@ -70,8 +69,15 @@ Welcome to the Pizzaria Coding Challenge! In this challenge, you'll work on a ba
 
 Your tasks are divided into several arcs. You can solve them in any order and use static data if needed.
 
-### OST:
+### Opening:
+
+- Clone the repository locally.
+- Create your own branch `challenge/[your-name]`.
 - Successfully run the application.
+- Complete the tasks and open a PR.
+  - _Arcs 1, 2, and 3_ are mandatory.
+  - _Final+ Arcs_ are required bonuses.
+  - _Post Cinematic..._ section is the homework.
 
 ### Arc-1: Frontend
 
