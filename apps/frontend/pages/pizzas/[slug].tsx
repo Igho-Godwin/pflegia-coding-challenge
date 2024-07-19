@@ -1,9 +1,14 @@
-import { STATIC_PIZZAS } from '@pizzaria/shared/pizzas';
+import { useRouter } from 'next/router'
 import Image from 'next/image';
+
+import { STATIC_PIZZAS } from '@pizzaria/shared/pizzas';
+
+
 
 // 💡 This may be the only place where finding slugs in your pizza is a good thing
 export default function Page() {
-  const pizza = STATIC_PIZZAS[0];
+  const router = useRouter()
+  const pizza = STATIC_PIZZAS[router.query.slug];
 
   return (
     <div className="grid grid-cols-4 mt-4 gap-10">

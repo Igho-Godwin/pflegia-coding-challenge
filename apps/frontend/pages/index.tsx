@@ -1,10 +1,28 @@
+import { useState } from 'react';
 import { STATIC_PIZZAS } from '@pizzaria/shared/pizzas';
 import { PizzaCard } from '../components/pizza-card';
 
+
 export function Index() {
-  const pizzas = STATIC_PIZZAS;
+  const [searchInput, setSearchInput] = useState("");
+  const [pizzas, setPizzas] = useState(STATIC_PIZZAS);
   const handleSearchInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    console.log('Someone is looking for', e);
+      const filteredPizza = STATIC_PIZZAS.filter((pizza)=>{
+          if(pizza.name.includes(e.target.value) ){
+              return true
+          }
+          pizza.ingredients.some((ingredient)=>{
+             if(ingredient.includes(e.target.value)){
+               return true
+             }
+          })
+    })
+    setSearchInput(e.target.value)
+    setPizzas(filteredPizza)
+  };
+
+  const handleFind: React.ClickEventHandler<HTMLInputElement> = (e) => {
+    
   };
 
   return (
@@ -34,8 +52,8 @@ export function Index() {
         </div>
       </form>
       <div className="mt-8 grid grid-cols-4 gap-10">
-        {pizzas?.map((pizza) => (
-          <PizzaCard key={pizza.name} id={0} {...pizza} />
+        {pizzas?.map((pizza, index) => (
+          <PizzaCard key={pizza.name} id={index} {...pizza} />
         ))}
       </div>
       <div className="mt-8"></div>

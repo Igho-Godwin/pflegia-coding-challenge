@@ -13,7 +13,7 @@ export class Pizza {
   name: string;
 
   @Field()
-  @Column()
+  @Column({name: "image_url"})
   imageUrl: string;
 
   @Field()
