@@ -24,6 +24,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'placehold.co',
       },
+      {
+        // https://loremflickr.com
+        protocol: 'https',
+        hostname: 'loremflickr.com',
+      },
     ],
   },
 };
