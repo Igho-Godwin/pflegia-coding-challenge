@@ -1,20 +1,40 @@
 import { useEffect, useState } from 'react';
 import { PizzaCard } from '../components/pizza-card';
-import { useContext } from 'react';
-
-import { PizzaContext } from '../context/PizzaContext';
 
 import Pizza from '../types/Pizza';
+import useFetch from '../hooks/useFetch';
+import MetaDataType from '../types/MetaDataType';
 
 export function Index() {
   const [searchInput, setSearchInput] = useState('');
-  const pizzaContextData = useContext(PizzaContext);
-  const { data, loading, error, metaData, fetchMore } = pizzaContextData;
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [metaData, setMetaData] = useState<MetaDataType | null>(null);
+
+  const {
+    data: dataFetched,
+    loading: loadingFetched,
+    error: errorFetched,
+    metaData: metaDataFetched,
+  } = useFetch<{data:Pizza[]}>(
+    `${process.env.NEXT_PUBLIC_API_URL}all?page=1&take=10&order=DESC`
+  );
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
 
   useEffect(() => {
-    setPizzas(data);
-  }, [data]);
+    if (dataFetched) {
+      setPizzas(dataFetched.data);
+    }
+    setLoading(loadingFetched);
+    setError(errorFetched);
+    setMetaData(metaDataFetched);
+    
+  }, [dataFetched, loadingFetched, errorFetched, metaDataFetched]);
+
+ 
+
+
+
 
   const handleSearchInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchInput(e.target.value);
@@ -38,13 +58,40 @@ export function Index() {
     setPizzas(filteredPizza);
   };
 
+  const fetchMore = async () => {
+    if (metaData?.page != undefined) {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}all?page=${
+        metaData.page + 1
+      }&take=10&order=DESC`;
+
+      try {
+        const res = await fetch(url);
+        const dataTemp = await res.json();
+        const dataInitialState = [...pizzas];
+        dataTemp && setPizzas([...dataInitialState, ...dataTemp.data]);
+        dataTemp?.meta && setMetaData(dataTemp.meta);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   if (loading) {
     return 'Loading...';
-  } else if (error) {
+  } 
+  
+  if (error) {
     return error;
-  } else if (pizzas?.length === 0) {
+  }
+
+  if (pizzas?.length === 0) {
     return 'No data';
-  } else {
+  }
+  else {
     return (
       <>
         <form className="max-w-md mx-auto">

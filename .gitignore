@@ -45,4 +45,5 @@ Thumbs.db
 .next
 out
 apps/backend/.env
+apps/frontend/.env
 apps/backend/schema.gql

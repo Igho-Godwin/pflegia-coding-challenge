@@ -1,18 +1,30 @@
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
 
-import { PizzaContext } from '../context/PizzaContext';
+import { usePizzaContext } from '../context/PizzaContext';
+
 import Pizza from '../types/Pizza';
+
+import useFetch from '../hooks/useFetch';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const router = useRouter();
-  const pizzaContextData = useContext(PizzaContext);
-  const { data } = pizzaContextData;
-  let ratingData;
-  let pizza: Pizza | undefined;
-  
+
+  const { setData } = usePizzaContext();
+  const url = `${process.env.NEXT_PUBLIC_API_URL}${router.query.slug}`;
+
+  const { data: pizza } = useFetch<Pizza>(url, {
+    enabled: Boolean(router.query.slug),
+  });
+
+  useEffect(() => {
+    if (pizza) {
+      setData(pizza);
+    }
+  }, [pizza, setData]);
+
   const showDifficultyRating = (pizza: Pizza) => {
     const { rating } = pizza;
     let badgeColor;
@@ -31,24 +43,24 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
     return { statusCategory, badgeColor };
   };
 
-  if (data?.length > 0) {
-    pizza = data.filter((dt) => dt.id === Number(router.query.slug))[0];
-    if (pizza != undefined) {
-      ratingData = showDifficultyRating(pizza);
-    }
+  let ratingDifficulty;
+
+  if (pizza) {
+    ratingDifficulty = showDifficultyRating(pizza);
   }
+
   return (
     <div className="text-gray-600 font-body vw-100">
       <div className="px-16 py-6 md:col-span-2 ">
         <header className="flex flex-col sticky top-0 z-50 bg-white">
           <h2 className="text-gray-700 text-6xl font-semibold">Pizzaria</h2>
           <h3 className="text-2xl font-semibold">
-            {pizza ? pizza.name : 'How to make your Pizza with love:'}
-            {ratingData != undefined && (
+            {pizza?.name ? pizza.name : 'How to make your Pizza with love:'}
+            {ratingDifficulty && (
               <span
-                className={`text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded  ml-5 ${ratingData.badgeColor}`}
+                className={`text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded  ml-5 ${ratingDifficulty.badgeColor}`}
               >
-                {ratingData.statusCategory}
+                {ratingDifficulty.statusCategory}
               </span>
             )}
           </h3>
