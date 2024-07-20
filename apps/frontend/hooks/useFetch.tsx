@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import MetaDataType from '../types/MetaDataType';
+import MetaDataType from '../shared/types/MetaDataType';
 
 function useFetch<T>(url: string, option?: { enabled: boolean }) {
   const [loading, setLoading] = useState(true);

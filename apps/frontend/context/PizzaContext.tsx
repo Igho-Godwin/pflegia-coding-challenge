@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-
-import Pizza from '../types/Pizza';
+import { Pizza } from '../shared/types/pizza';
 
 type PizzaContextType =
   | {
@@ -26,7 +25,9 @@ export const PizzaContextProvider: React.FC<{ children: React.ReactNode }> = ({
 export const usePizzaContext = () => {
   const context = useContext(PizzaContext);
   if (context === undefined) {
-    throw new Error('useSlugContext must be used within a SlugProvider');
+    throw new Error(
+      'usePizzaContext must be used within a PizzaContextProvider'
+    );
   }
   return context;
 };

@@ -3,9 +3,9 @@ import React, { useEffect } from 'react';
 
 import { usePizzaContext } from '../context/PizzaContext';
 
-import Pizza from '../types/Pizza';
-
 import useFetch from '../hooks/useFetch';
+
+import { Pizza } from '../shared/types/pizza';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({
   children,

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 import Image from 'next/image';
-import Pizza from '../types/Pizza';
+import { Pizza } from '../shared/types/pizza';
 
 export const PizzaCard = (pizza: Pizza) => {
   const [hide, unHide] = useState(true);

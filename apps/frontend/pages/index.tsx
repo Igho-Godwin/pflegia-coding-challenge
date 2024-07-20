@@ -1,25 +1,59 @@
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PizzaCard } from '../components/pizza-card';
 
-import Pizza from '../types/Pizza';
+import { useRouter } from 'next/router';
+
 import useFetch from '../hooks/useFetch';
-import MetaDataType from '../types/MetaDataType';
+import MetaDataType from '../shared/types/MetaDataType';
+import useDebounce from '../hooks/useDebounce';
+import { Pizza } from '../shared/types/pizza';
 
 export function Index() {
   const [searchInput, setSearchInput] = useState('');
+
+  const debouncedSearchValue = useDebounce(searchInput, 300);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [metaData, setMetaData] = useState<MetaDataType | null>(null);
+
+  const [pizzas, setPizzas] = useState<Pizza[]>([]);
+
+  const [suggestions, setSuggestions] = useState<Pizza[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (debouncedSearchValue) {
+      const filteredSuggestions = pizzas.filter((pizza) => {
+        if (
+          pizza.name.toUpperCase().includes(debouncedSearchValue.toUpperCase())
+        ) {
+          return true;
+        }
+        return pizza.ingredients.some((ingredient) => {
+          if (
+            ingredient
+              .toUpperCase()
+              .includes(debouncedSearchValue.toUpperCase())
+          ) {
+            return true;
+          }
+        });
+      });
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  }, [pizzas, debouncedSearchValue]);
 
   const {
     data: dataFetched,
     loading: loadingFetched,
     error: errorFetched,
     metaData: metaDataFetched,
-  } = useFetch<{data:Pizza[]}>(
+  } = useFetch<{ data: Pizza[] }>(
     `${process.env.NEXT_PUBLIC_API_URL}all?page=1&take=10&order=DESC`
   );
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
 
   useEffect(() => {
     if (dataFetched) {
@@ -28,20 +62,23 @@ export function Index() {
     setLoading(loadingFetched);
     setError(errorFetched);
     setMetaData(metaDataFetched);
-    
   }, [dataFetched, loadingFetched, errorFetched, metaDataFetched]);
 
- 
-
-
-
-
-  const handleSearchInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleSearchChange: React.ChangeEventHandler<HTMLInputElement> = (
+    e
+  ) => {
     setSearchInput(e.target.value);
+  };
+
+  const handleSuggestionClick = (id: number) => {
+    if (id) {
+      router.push(`/pizzas/${id}`);
+    }
   };
 
   const handleFind: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     const pizzasTemp = [...pizzas];
     const filteredPizza = pizzasTemp.filter((pizza) => {
       if (pizza.name.toUpperCase().includes(searchInput.toUpperCase())) {
@@ -58,7 +95,7 @@ export function Index() {
     setPizzas(filteredPizza);
   };
 
-  const fetchMore = async () => {
+  const fetchMore = useCallback(async () => {
     if (metaData?.page != undefined) {
       const url = `${process.env.NEXT_PUBLIC_API_URL}all?page=${
         metaData.page + 1
@@ -78,20 +115,19 @@ export function Index() {
         setLoading(false);
       }
     }
-  };
+  }, [metaData, pizzas]);
 
   if (loading) {
     return 'Loading...';
-  } 
-  
+  }
+
   if (error) {
     return error;
   }
 
   if (pizzas?.length === 0) {
     return 'No data';
-  }
-  else {
+  } else {
     return (
       <>
         <form className="max-w-md mx-auto">
@@ -102,18 +138,31 @@ export function Index() {
             Search
           </label>
           <div className="relative">
-            <input
-              type="search"
-              id="default-search"
-              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search for Pizzas, Ingredients..."
-              required
-              onChange={handleSearchInput}
-            />
+            <div className="autocomplete">
+              <input
+                type="text"
+                className="block width-150-percent  p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                value={searchInput}
+                onChange={handleSearchChange}
+                placeholder="Search for Pizzas, Ingredients..."
+              />
+              {suggestions.length > 0 && (
+                <ul className="suggestions-list">
+                  {suggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.id}
+                      onClick={() => handleSuggestionClick(suggestion.id)}
+                    >
+                      {suggestion.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <button
               onClick={handleFind}
-              type="submit"
+              type="button"
               className="text-white absolute end-2.5 bottom-2.5 bg-gray-900 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-black-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-black-600 dark:hover:bg-black-700 dark:focus:ring-black-800"
             >
               Find!
