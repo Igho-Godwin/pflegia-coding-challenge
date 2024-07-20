@@ -5,6 +5,7 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 
 import { AppModule } from './app/app.module';
 
@@ -14,6 +15,13 @@ async function bootstrap() {
       origin: false,
     },
   });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    })
+  );
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors({ origin: '*' });
