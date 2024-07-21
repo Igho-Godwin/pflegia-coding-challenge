@@ -27,15 +27,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
 
   const showDifficultyBadgeColor = (pizza: Pizza) => {
     const { difficulty } = pizza;
-    let badgeColor;
     if (difficulty === 'Easy') {
-      badgeColor = 'dark:bg-yellow-900';
+      return 'dark:bg-yellow-900';
     } else if (difficulty === 'Mid') {
-      badgeColor = 'dark:bg-blue-900';
+      return 'dark:bg-blue-900';
     } else if (difficulty === 'Hard') {
-      badgeColor = 'dark:bg-green-900';
+      return 'dark:bg-green-900';
     }
-    return badgeColor;
   };
 
   let badgeColor;
