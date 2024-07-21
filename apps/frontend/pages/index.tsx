@@ -95,7 +95,6 @@ export function Index() {
       });
     });
     filteredPizza.sort((a, b) => b.rating - a.rating);
-
     setPizzas(filteredPizza);
   };
 
@@ -175,7 +174,7 @@ export function Index() {
         </form>
         <div className="mt-8 grid grid-cols-4 gap-10">
           {pizzas?.length > 0 &&
-            pizzas?.map((pizza) => <PizzaCard key={pizza.name} {...pizza} />)}
+            pizzas?.map((pizza) => <PizzaCard key={pizza.id} {...pizza} />)}
         </div>
         <div className="mt-8"></div>
         <div className="flex justify-center">
