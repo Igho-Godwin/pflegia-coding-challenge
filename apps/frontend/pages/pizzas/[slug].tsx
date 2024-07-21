@@ -6,7 +6,7 @@ const Page = () => {
   const { data: pizza } = usePizzaContext();
 
   if (!pizza) {
-    return <div>Loading...</div>;
+    return <div>No Data</div>;
   }
 
   const { imageUrl, ingredients, instructions, name } = pizza;
