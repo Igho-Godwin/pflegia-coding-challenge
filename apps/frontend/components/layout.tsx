@@ -25,28 +25,23 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [pizza, setData]);
 
-  const showDifficultyRating = (pizza: Pizza) => {
-    const { rating } = pizza;
+  const showDifficultyBadgeColor = (pizza: Pizza) => {
+    const { difficulty } = pizza;
     let badgeColor;
-    let statusCategory;
-    if (rating >= 1 && rating <= 4) {
+    if (difficulty === 'Easy') {
       badgeColor = 'dark:bg-yellow-900';
-      statusCategory = 'Easy';
-      console.log(badgeColor);
-    } else if (rating >= 5 && rating <= 8) {
+    } else if (difficulty === 'Mid') {
       badgeColor = 'dark:bg-blue-900';
-      statusCategory = 'Mid';
-    } else if (rating >= 9 && rating <= 12) {
+    } else if (difficulty === 'Hard') {
       badgeColor = 'dark:bg-green-900';
-      statusCategory = 'Hard';
     }
-    return { statusCategory, badgeColor };
+    return badgeColor;
   };
 
-  let ratingDifficulty;
+  let badgeColor;
 
   if (pizza) {
-    ratingDifficulty = showDifficultyRating(pizza);
+    badgeColor = showDifficultyBadgeColor(pizza);
   }
 
   return (
@@ -56,11 +51,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
           <h2 className="text-gray-700 text-6xl font-semibold">Pizzaria</h2>
           <h3 className="text-2xl font-semibold">
             {pizza?.name ? pizza.name : 'How to make your Pizza with love:'}
-            {ratingDifficulty && (
+            {badgeColor && (
               <span
-                className={`text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded  ml-5 ${ratingDifficulty.badgeColor}`}
+                className={`text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded  ml-5 ${badgeColor}`}
               >
-                {ratingDifficulty.statusCategory}
+                {pizza?.difficulty}
               </span>
             )}
           </h3>
