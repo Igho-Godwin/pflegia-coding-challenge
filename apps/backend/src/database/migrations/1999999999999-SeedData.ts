@@ -3,7 +3,7 @@ import { STATIC_PIZZAS } from '@pizzaria/shared/pizzas';
 
 // I have a bad feeling about this
 function transformArrayIntoSQLParam(array: string[]) {
-  return `ARRAY(${array.map((e) => `'${e}'`).join(', ')})`;
+  return `ARRAY[${array.map((e) => `'${e}'`).join(', ')}]`;
 }
 
 function transformPizzaDataIntoSQLParams() {

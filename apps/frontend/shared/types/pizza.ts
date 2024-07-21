@@ -5,4 +5,5 @@ export type Pizza = {
   ingredients: string[];
   imageUrl: string;
   instructions: string[];
+  difficulty: string;
 };

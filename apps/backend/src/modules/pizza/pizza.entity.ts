@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, AfterLoad } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -13,7 +13,7 @@ export class Pizza {
   name: string;
 
   @Field()
-  @Column()
+  @Column({ name: 'image_url' })
   imageUrl: string;
 
   @Field()
@@ -35,4 +35,17 @@ export class Pizza {
     nullable: true,
   })
   instructions: string[];
+
+  difficulty: string;
+
+  @AfterLoad()
+  getDifficulty() {
+    if (this.rating >= 1 && this.rating <= 4) {
+      this.difficulty = 'Easy';
+    } else if (this.rating >= 5 && this.rating <= 8) {
+      this.difficulty = 'Mid';
+    } else if (this.rating >= 9 && this.rating <= 12) {
+      this.difficulty = 'Hard';
+    }
+  }
 }
