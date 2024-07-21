@@ -8,13 +8,16 @@ import { Pizza } from '../shared/types/pizza';
 export const PizzaCard = (pizza: Pizza) => {
   const [hide, unHide] = useState(true);
   const { name, ingredients, imageUrl, rating, id } = pizza;
+
   if (!pizza) return null;
+
   let counter = 0;
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
     unHide(false);
   };
+
   return (
     <Link href={`/pizzas/` + id}>
       <div className="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
