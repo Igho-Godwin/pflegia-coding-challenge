@@ -1,6 +1,9 @@
 import { useEffect, RefObject } from 'react';
 
-function useClickOutside<T extends HTMLElement>(ref:RefObject<T>, closeFunction: () => void) {
+function useClickOutside<T extends HTMLElement>(
+  ref: RefObject<T>,
+  closeFunction: () => void
+) {
   useEffect(() => {
     /**
      * Close Menu if click outside
@@ -19,4 +22,4 @@ function useClickOutside<T extends HTMLElement>(ref:RefObject<T>, closeFunction:
   }, [ref, closeFunction]);
 }
 
-export default useClickOutside
+export default useClickOutside;
