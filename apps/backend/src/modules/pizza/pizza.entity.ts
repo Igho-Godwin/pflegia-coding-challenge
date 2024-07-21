@@ -36,7 +36,7 @@ export class Pizza {
   })
   instructions: string[];
 
-  protected difficulty: string;
+  difficulty: string;
 
   @AfterLoad()
   getDifficulty() {

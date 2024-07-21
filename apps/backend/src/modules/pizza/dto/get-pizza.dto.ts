@@ -18,4 +18,7 @@ export class GetPizzaDTO {
 
   @IsString({ each: true })
   instructions: string[];
+
+  @IsString()
+  difficulty: string;
 }
