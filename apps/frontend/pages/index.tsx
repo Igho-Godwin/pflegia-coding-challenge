@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PizzaCard } from '../components/pizza-card';
 
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import useFetch from '../hooks/useFetch';
 import MetaDataType from '../shared/types/MetaDataType';
 import useDebounce from '../hooks/useDebounce';
 import { Pizza } from '../shared/types/pizza';
+import useClickOutside from '../hooks/useClickOutside';
 
 export function Index() {
   const [searchInput, setSearchInput] = useState('');
@@ -21,6 +22,9 @@ export function Index() {
 
   const [suggestions, setSuggestions] = useState<Pizza[]>([]);
   const router = useRouter();
+
+  const wrapperRef = useRef<HTMLFormElement>(null);
+  useClickOutside(wrapperRef, () => setSuggestions([]));
 
   useEffect(() => {
     if (debouncedSearchValue) {
@@ -130,7 +134,7 @@ export function Index() {
   } else {
     return (
       <>
-        <form className="max-w-md mx-auto">
+        <form className="max-w-md mx-auto" ref={wrapperRef}>
           <label
             htmlFor="default-search"
             className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -175,7 +179,7 @@ export function Index() {
         </div>
         <div className="mt-8"></div>
         <div className="flex justify-center">
-          {metaData?.hasNextPage && (
+          {metaData?.hasNextPage && !searchInput && (
             <button
               className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
               type="button"
