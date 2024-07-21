@@ -8,7 +8,9 @@ export class Seed100Pizzas1721438075156 implements MigrationInterface {
       const name = faker.commerce.product() + ' pizza';
       const rating = faker.number.int({ min: 1, max: 12 });
       const imageUrl = faker.image.urlLoremFlickr({
-        category: 'food'
+        category: 'food',
+        height: 300,
+        width: 300,
       });
       const ingredients = times(faker.number.int({ min: 1, max: 7 }), () =>
         faker.lorem.words({ min: 1, max: 3 })
