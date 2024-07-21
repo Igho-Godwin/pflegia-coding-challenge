@@ -5,9 +5,7 @@ function useClickOutside<T extends HTMLElement>(
   closeFunction: () => void
 ) {
   useEffect(() => {
-    /**
-     * Close Menu if click outside
-     */
+  
     function handleClickOutside(event: Event) {
       if (ref.current && !ref.current?.contains(event.target as Node)) {
         closeFunction();
